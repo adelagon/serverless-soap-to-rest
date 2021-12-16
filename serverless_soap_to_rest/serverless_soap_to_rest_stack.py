@@ -38,7 +38,7 @@ class ServerlessSoapToRestStack(cdk.Stack):
             cluster=cluster,
             cpu=1024,
             memory_limit_mib=4096,
-            desired_count=1,
+            desired_count=2,
             public_load_balancer=True,
             task_image_options={
                 "image": ecs.ContainerImage.from_docker_image_asset(soap_server_asset),
@@ -46,6 +46,8 @@ class ServerlessSoapToRestStack(cdk.Stack):
                 "enable_logging": True
             }
         )
+        soap_server.target_group.configure_health_check(path="/?wsdl")
+        #soap_server.target_group.configure_health_check(enabled=False)
         
         ### SOAP Proxy Lambda Function
         python_layer = _lambda.LayerVersion(
