@@ -46,8 +46,9 @@ class ServerlessSoapToRestStack(cdk.Stack):
                 "enable_logging": True
             }
         )
-        soap_server.target_group.configure_health_check(path="/?wsdl")
-        #soap_server.target_group.configure_health_check(enabled=False)
+        soap_server.target_group.configure_health_check(
+            healthy_http_codes="405"
+        )
         
         ### SOAP Proxy Lambda Function
         python_layer = _lambda.LayerVersion(
